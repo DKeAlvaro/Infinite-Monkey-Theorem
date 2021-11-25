@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.ArrayList;
 
 /**
  * Some very basic stuff to get you started. It shows basically how each
@@ -21,29 +22,13 @@ public class Practical2 {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		int popSize = 3; // Nº of generations
-		for (char c = 'A'; c <= 'Z'; c++) {
-			alphabet[c - 'A'] = c;
-		}
-		alphabet[26] = ' '; // 26th element of the alphabet is the space
-		Random generator = new Random(System.currentTimeMillis());
-		Individual[] population = new Individual[popSize];
-		// we initialize the population with random characters
-		for (int i = 0; i < popSize; i++) {
-			char[] tempChromosome = new char[TARGET.length()]; // Creates a char array with its length being equal to the target's length
+		// char[] JavaCharArray = {'H', 'E', 'L', '', ' ', 'W', 'O', 'R', 'L', 'D'};  
+		// Individual individual1 = new Individual(JavaCharArray);
+		// randomGeneration();
+		chooseFirstParent(randomGeneration());
+		// System.out.println(targetLetters(individual1));
 
-			for (int j = 0; j < TARGET.length(); j++) { // iterate throughout the Target.length (HelloWorld) assign a random letter in the alphabet to each index in the new array
-				tempChromosome[j] = alphabet[generator.nextInt(alphabet.length)];
 
-			}
-			population[i] = new Individual(tempChromosome); // add this random individual to the population
-
-		}
-		// What does your population look like?
-		for (int i = 0; i < population.length; i++) {
-			System.out.println(population[i].genoToPhenotype()); // gets the individual's chromosome(the letter) and prints it
-
-		}
 
 	}
 
@@ -66,8 +51,56 @@ public class Practical2 {
 
 	}
 
-	public static void chooseParents(Individual[] population){   //check every Individual of a generation & pick the two best (These will be the parents of the next generation)
+	public static Individual chooseFirstParent(Individual[] population1){
+		boolean parentFound = false;
+		int index = 0;
+		int generationNumber = 1;
+		while(!parentFound){
+			population1 = randomGeneration();
+			for(int i = 0; i<population1.length; i++){
+				if(targetLetters(population1[i]) >= 8){
+					parentFound = true;
+					index = i;
+					break;
+				}
+				
+			}
+			System.out.println("generation " + generationNumber);
+			generationNumber++;
 
+		}
+		System.out.println("Parent found!!!");
+		System.out.println(population1[index].genoToPhenotype());	
+		return population1[index];
+	}
+
+	public static boolean contains(ArrayList<Character> foundChars, char letter){
+		boolean found = false;
+		for(int x = 0; x < foundChars.size(); x++){
+			if(foundChars.get(x) == letter){
+				found = true;
+				break;
+			}
+		}
+		return found;
+	}
+
+	public static int targetLetters(Individual individual) {
+		ArrayList<Character> foundChars = new ArrayList<Character>();
+		int fitness = 0;
+		for(int i = 0; i < individual.getChromosome().length; i++){
+			if((individual.chromosome[i] == 'H' || individual.chromosome[i] == 'E'|| individual.chromosome[i] == ' '|| individual.chromosome[i] == 'L' || individual.chromosome[i] == 'O' ||individual.chromosome[i] == 'W' ||individual.chromosome[i] == 'R' ||individual.chromosome[i] == 'D') && !contains(foundChars, individual.chromosome[i])){
+				fitness++;
+				foundChars.add(individual.chromosome[i]);
+			}		
+		}
+		return fitness;
+	}
+
+	
+
+	public static void chooseParents(Individual[] population){   //check every Individual of a generation & pick the two best (These will be the parents of the next generation)
+		
 
 	}
 
@@ -75,5 +108,33 @@ public class Practical2 {
 
 	}
 
+	public static Individual[] randomGeneration(){
+		int popSize = 100;
+		for (char c = 'A'; c <= 'Z'; c++) {
+			alphabet[c - 'A'] = c;
+		}
+		alphabet[26] = ' '; // 26th element of the alphabet is the space
+		Random generator = new Random(System.currentTimeMillis());
+		Individual[] population = new Individual[popSize];
+		// we initialize the population with random characters
+		for (int i = 0; i < popSize; i++) {
+			char[] tempChromosome = new char[TARGET.length()]; // Creates a char array with its length being equal to the target's length
+
+			for (int j = 0; j < TARGET.length(); j++) { // iterate throughout the Target.length (HelloWorld) assign a random letter in the alphabet to each index in the new array
+				tempChromosome[j] = alphabet[generator.nextInt(alphabet.length)];
+
+			}
+			population[i] = new Individual(tempChromosome); // add this random individual to the population
+
+		}
+
+		// What does your population look like?
+		/*for (int i = 0; i < population.length; i++) {
+			System.out.println(population[i].genoToPhenotype()); // gets the individual's chromosome(the letter) and prints it
+
+		}
+		*/
+		return population;
+	}
 
 }
