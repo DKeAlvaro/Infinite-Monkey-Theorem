@@ -38,7 +38,7 @@
  */
 public class HeapSort {
 
-    public static void sort(Individual i[]) {
+    public void sort(Individual i[]) {
         int N = i.length;
 
         for (int k = N / 2; k > 0; k--)
