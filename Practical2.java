@@ -13,47 +13,49 @@ import java.util.ArrayList;
  * 
  */
 
-public class Practical2 {
+public class Practical2 implements Cloneable {
 	public static int popsize = 100;
 	static final String TARGET = "HELLO WORLD";
+	static final char[] charTarget = { 'H', 'E', 'L', 'L', 'O', ' ', 'W', 'O', 'R', 'L', 'D' };
 	static char[] alphabet = new char[27];
 
 	/**
 	 * @param args
 	 */
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+
 	public static void main(String[] args) {
 
 		Individual[] currentGeneration = randomGeneration(popsize);
 		HeapSort prueba = new HeapSort();
-		while (currentGeneration[0].getChromosome().equals("HELLO WORLD") == false) {
+		for (int i = 0; i < currentGeneration.length; i++) {
+			currentGeneration[i].setFitness(myFitness(currentGeneration[i]));
+		}
+		prueba.sort(currentGeneration);
+		printGeneration(currentGeneration);
+
+		while (currentGeneration[0].getChromosome().equals(charTarget) == false) {
 			for (int i = 0; i < currentGeneration.length; i++) {
 				currentGeneration[i].setFitness(myFitness(currentGeneration[i]));
 			}
 			prueba.sort(currentGeneration);
 			Individual[] parents = new Individual[10];
-			/*
-			 * for(int i = 0; i < 10; i++){ for(int j = 0; j < TARGET.length(); j++){
-			 * parents[i].chromosome[j] = currentGeneration[i].getChromosome()[j]; }
-			 * 
-			 * } for(int i = 0; i < popsize; i++){ for(int j = 0; j < TARGET.length(); j++){
-			 * currentGeneration[i].chromosome[j] =
-			 * crossover(parents)[i].getChromosome()[j]; } }
-			 */
-			for (int j = 0; j < parents.length; j++) {
-				parents[j].chromosome = currentGeneration[j].getChromosome();
-			}
-			for (int j = 0; j < TARGET.length(); j++) {
-				currentGeneration[j].chromosome = crossover(parents)[j].getChromosome();
+			char[] prueba2 = new char[TARGET.length()];
+			for (int i = 0; i < parents.length; i++) {
+				parents[i] = new Individual(prueba2);
 			}
 
-			if (currentGeneration[0].getChromosome().equals("HELLO WORLD")) {
-				printGeneration(currentGeneration);
-				break;
+			for (int i = 0; i < parents.length; i++) {
+				for (int j = 0; j < TARGET.length(); j++) {
+					parents[i].chromosome[j] = currentGeneration[i].getChromosome()[j];
+				}
 			}
+
+			currentGeneration = crossover(parents);
+			printGeneration(parents);
 		}
-
-		// prueba.sort(currentGeneration);
-		// printGeneration(currentGeneration);
 
 	}
 
@@ -170,11 +172,14 @@ public class Practical2 {
 		}
 	}
 
-	public static Individual[] crossover(Individual[] parents) {
-		Individual[] newGeneration = new Individual[100];
+	public static Individual[] crossover(Individual[] parents) { // creates a new generation based on the parents
+		// List<Individual> newGeneration= new ArrayList<Individual>(popsize);
+		Individual[] newGeneration = new Individual[popsize];
+		char[] prueba = new char[TARGET.length()];
 		for (int i = 0; i < popsize; i++) {
+			newGeneration[i] = new Individual(prueba);
 			for (int j = 0; j < TARGET.length(); j++) {
-				int random = (int) (Math.random() * 10 + 1);
+				int random = (int) (Math.random() * parents.length);
 				newGeneration[i].getChromosome()[j] = parents[random].getChromosome()[j];
 			}
 		}
