@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 
 public class Practical2 implements Cloneable {
-	public static int popsize = 100;
+	public static int popsize = 50;
 	static final String TARGET = "HELLO WORLD";
 	static final char[] charTarget = { 'H', 'E', 'L', 'L', 'O', ' ', 'W', 'O', 'R', 'L', 'D' };
 	static char[] alphabet = new char[27];
@@ -34,13 +34,17 @@ public class Practical2 implements Cloneable {
 			currentGeneration[i].setFitness(myFitness(currentGeneration[i]));
 		}
 		prueba.sort(currentGeneration);
-		printGeneration(currentGeneration);
+		// printGeneration(currentGeneration);
+		int counter = 0;
 
-		while (currentGeneration[0].getChromosome().equals(charTarget) == false) {
+		// while (currentGeneration[0].getChromosome().equals(charTarget) == false) {
+		while (counter < 2) {
+
 			for (int i = 0; i < currentGeneration.length; i++) {
 				currentGeneration[i].setFitness(myFitness(currentGeneration[i]));
 			}
 			prueba.sort(currentGeneration);
+			// printGeneration(currentGeneration);
 			Individual[] parents = new Individual[10];
 			char[] prueba2 = new char[TARGET.length()];
 			for (int i = 0; i < parents.length; i++) {
@@ -49,12 +53,21 @@ public class Practical2 implements Cloneable {
 
 			for (int i = 0; i < parents.length; i++) {
 				for (int j = 0; j < TARGET.length(); j++) {
-					parents[i].chromosome[j] = currentGeneration[i].getChromosome()[j];
+					// parents[i].chromosome[j] = currentGeneration[i].getChromosome()[j];
+					parents[i].changeLetter(j, currentGeneration[i].getChromosome()[j]);
 				}
+				System.out.println(parents[i].genoToPhenotype() + " aquí funciona");
+			}
+			System.out.println("creating parents");
+
+			for (int i = 0; i < parents.length; i++) {
+				System.out.println(parents[i].genoToPhenotype() + " aquí no funciona");
 			}
 
+			// printGeneration(parents);
 			currentGeneration = crossover(parents);
-			printGeneration(parents);
+			counter++;
+
 		}
 
 	}
@@ -128,16 +141,6 @@ public class Practical2 implements Cloneable {
 		return fitness;
 	}
 
-	public static void chooseParents(Individual[] population) { // check every Individual of a generation & pick the two
-																// best (These will be the parents of the next
-																// generation)
-
-	}
-
-	public static void mutateIndividual(Individual individual) { // Create the new generation made by mixing the parents
-
-	}
-
 	public static Individual[] randomGeneration(int popSize) {
 		// int popSize = 100;
 		for (char c = 'A'; c <= 'Z'; c++) {
@@ -166,8 +169,8 @@ public class Practical2 implements Cloneable {
 		int individualnumber = 1;
 		for (int i = 0; i < population.length; i++) {
 			System.out.println(population[i].genoToPhenotype() + " individual number " + individualnumber
-					+ " individual fitness " + population[i].getFitness()); // gets the individual's chromosome(the
-																			// letter) and prints it
+					+ " individual fitness " + population[i].getFitness()); // gets the individual's chromosome
+																			// and prints it
 			individualnumber++;
 		}
 	}
@@ -176,11 +179,12 @@ public class Practical2 implements Cloneable {
 		// List<Individual> newGeneration= new ArrayList<Individual>(popsize);
 		Individual[] newGeneration = new Individual[popsize];
 		char[] prueba = new char[TARGET.length()];
+		// int random = 0;
 		for (int i = 0; i < popsize; i++) {
 			newGeneration[i] = new Individual(prueba);
 			for (int j = 0; j < TARGET.length(); j++) {
-				int random = (int) (Math.random() * parents.length);
-				newGeneration[i].getChromosome()[j] = parents[random].getChromosome()[j];
+				// random = (int) (Math.random() * parents.length+1);
+				newGeneration[i].changeLetter(j, parents[(int) (Math.random() * parents.length)].getChromosome()[j]);
 			}
 		}
 		return newGeneration;

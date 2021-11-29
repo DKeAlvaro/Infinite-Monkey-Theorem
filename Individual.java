@@ -1,5 +1,5 @@
 
-public class Individual {
+public class Individual implements Cloneable {
 
 	char[] chromosome; // each chromosome represents each letter from the alphabet
 	double fitness;
@@ -7,6 +7,10 @@ public class Individual {
 	public Individual(char[] chromosome) {
 		this.chromosome = chromosome;
 		this.fitness = 0; // this is the value we have to change
+	}
+
+	public void changeLetter(int place, char chromosomeToReplace) {
+		this.chromosome[place] = chromosomeToReplace;
 	}
 
 	public char[] getChromosome() {
@@ -37,6 +41,11 @@ public class Individual {
 			chromClone[i] = chromosome[i];
 		}
 		return new Individual(chromClone);
+	}
+
+	@Override
+	public String toString() {
+		return new String(this.chromosome);
 	}
 
 }
