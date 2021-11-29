@@ -36,16 +36,16 @@ public class Practical2 implements Cloneable {
 		prueba.sort(currentGeneration);
 		// printGeneration(currentGeneration);
 		int counter = 0;
-
-		//while (currentGeneration[0].getFitness() <= 109.0) {
-		while (counter < 11) {
+		boolean solutionFound = false;
+		while (counter<10) {
+		//while (!solutionFound) {
 
 			for (int i = 0; i < currentGeneration.length; i++) {
 				currentGeneration[i].setFitness(myFitness(currentGeneration[i]));
 			}
 			prueba.sort(currentGeneration);
 			// printGeneration(currentGeneration);
-			Individual[] parents = new Individual[40];
+			Individual[] parents = new Individual[50];
 
 			for (int i = 0; i < parents.length; i++) {
 				parents[i] = new Individual(new char[TARGET.length()]);
@@ -58,15 +58,23 @@ public class Practical2 implements Cloneable {
 			//System.out.println("creating parents");
 
 			for (int i = 0; i < parents.length; i++) {
-				//System.out.println(parents[i].genoToPhenotype() + " aquí no funciona");
-			}
-			for (int i = 0; i < parents.length; i++) {
 				parents[i].setFitness(myFitness(currentGeneration[i]));
 			}
 			printGeneration(parents);
 			System.out.println("Generation number " + counter);
 			currentGeneration = crossover(parents);
 			counter++;
+
+			for (int i = 0; i < parents.length; i++) {
+				if(parents[i].getFitness() == 110){
+					System.out.println(parents[i].genoToPhenotype());
+					System.out.println("solutionFound");
+					solutionFound = true;
+					break;
+				}
+			}
+			
+			
 
 		}
 
