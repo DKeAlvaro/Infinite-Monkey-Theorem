@@ -18,13 +18,9 @@ public class Practical2 implements Cloneable {
 	static final String TARGET = "HELLO WORLD";
 	static final char[] charTarget = { 'H', 'E', 'L', 'L', 'O', ' ', 'W', 'O', 'R', 'L', 'D' };
 	static char[] alphabet = new char[27];
+	 static int generatioNumber = 9;
 
-	/**
-	 * @param args
-	 */
-	public Object clone() throws CloneNotSupportedException {
-		return super.clone();
-	}
+	
 
 	public static void main(String[] args) {
 
@@ -34,17 +30,15 @@ public class Practical2 implements Cloneable {
 			currentGeneration[i].setFitness(myFitness(currentGeneration[i]));
 		}
 		prueba.sort(currentGeneration);
-		// printGeneration(currentGeneration);
 		int counter = 0;
 		boolean solutionFound = false;
-		while (counter<10) {
-		//while (!solutionFound) {
+		while (counter<=generatioNumber) {
+		
 
 			for (int i = 0; i < currentGeneration.length; i++) {
 				currentGeneration[i].setFitness(myFitness(currentGeneration[i]));
 			}
 			prueba.sort(currentGeneration);
-			// printGeneration(currentGeneration);
 			Individual[] parents = new Individual[50];
 
 			for (int i = 0; i < parents.length; i++) {
@@ -52,10 +46,8 @@ public class Practical2 implements Cloneable {
 				for (int j = 0; j < parents[0].chromosome.length; j++) {
 					// parents[i].chromosome[j] = currentGeneration[i].getChromosome()[j];
 					parents[i].changeLetter(j, currentGeneration[i].getChromosome()[j]);
-				}
-				//System.out.println(parents[i].genoToPhenotype() + " aquí funciona");
+				}	
 			}
-			//System.out.println("creating parents");
 
 			for (int i = 0; i < parents.length; i++) {
 				parents[i].setFitness(myFitness(currentGeneration[i]));
@@ -68,7 +60,7 @@ public class Practical2 implements Cloneable {
 			for (int i = 0; i < parents.length; i++) {
 				if(parents[i].getFitness() == 110){
 					System.out.println(parents[i].genoToPhenotype());
-					System.out.println("solutionFound");
+					System.out.println("Solution Found!!!");
 					solutionFound = true;
 					break;
 				}
