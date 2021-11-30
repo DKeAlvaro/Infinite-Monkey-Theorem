@@ -14,7 +14,9 @@ import java.util.ArrayList;
  */
 
 public class Practical2 {
-	public static int popsize = 300;
+	public static int popsize = 100;
+	public static int parentsLength = 50;
+	public static Individual[] parents = new Individual[50];
 	static final String TARGET = "HELLO WORLD";
 
 	static char[] alphabet = new char[27];
@@ -53,7 +55,6 @@ public class Practical2 {
 					break;
 				}
 			}
-			Individual[] parents = new Individual[50];
 
 			for (int i = 0; i < parents.length; i++) {
 				parents[i] = new Individual(new char[TARGET.length()]);
