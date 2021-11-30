@@ -16,7 +16,10 @@ import java.util.ArrayList;
 public class Practical2 {
 	public static int popsize = 100;
 	public static int parentsLength = 50;
-	public static Individual[] parents = new Individual[50];
+	public static int mutationRate = (int) 0.2 *popsize;
+
+
+	public static Individual[] parents = new Individual[parentsLength];
 	static final String TARGET = "HELLO WORLD";
 
 	static char[] alphabet = new char[27];
@@ -191,7 +194,7 @@ public class Practical2 {
 	public static Individual[] crossover(Individual[] parents) { // creates a new generation based on the parent
 		Individual[] newGeneration = new Individual[popsize];
 		int mutations = 0;
-		final int mutationRate = (int) 0.2 * popsize;
+		// final int mutationRate = (int) 0.2 * popsize;
 		for (int i = 0; i < popsize; i++) {
 			newGeneration[i] = new Individual(new char[TARGET.length()]);
 			if (i == (int) (Math.random() * popsize) && mutations < mutationRate) {
