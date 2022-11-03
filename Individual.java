@@ -2,7 +2,7 @@
 public class Individual implements Cloneable {
 
 	char[] chromosome; // each chromosome represents each letter from the alphabet
-	double fitness;
+	int fitness;
 
 	public Individual(char[] chromosome) {
 		this.chromosome = chromosome;
@@ -21,11 +21,11 @@ public class Individual implements Cloneable {
 		this.chromosome = chromosome;
 	}
 
-	public double getFitness() {
+	public int getFitness() {
 		return fitness;
 	}
 
-	public void setFitness(double fitness) {
+	public void setFitness(int fitness) {
 		this.fitness = fitness;
 	}
 
