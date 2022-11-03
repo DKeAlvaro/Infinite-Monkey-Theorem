@@ -27,7 +27,7 @@ public class Practical2 {
 	}
 
 	public static void entrypoint(){
-		Individual[] currentGeneration = randomGeneration(popsize); // first generation is totally random
+		Individual[] currentGeneration = randomGeneration(popsize); 
 		HeapSort sorter = new HeapSort();
 		int generationCounter = 1;
 		boolean solutionFound = false;
@@ -45,7 +45,8 @@ public class Practical2 {
 			printGeneration(currentGeneration);		
 
 			if(!solutionFound){
-				for (int i = 0; i < parents.length; i++) { //Creates the parents of the generation based on the elitist selection
+				//Creates the parents of the generation based on the elitist selection
+				for (int i = 0; i < parents.length; i++) { 
 					parents[i] = currentGeneration[i].clone();
 				}
 				currentGeneration = applyMutation(crossover(parents));
@@ -68,25 +69,19 @@ public class Practical2 {
 	}
 
 	public static Individual[] randomGeneration(int popSize) {
-		// int popSize = 100;
 		for (char c = 'A'; c <= 'Z'; c++) {
 			alphabet[c - 'A'] = c;
 		}
-		alphabet[26] = ' '; // 26th element of the alphabet is the space
+		alphabet[26] = ' ';
 		Random generator = new Random(System.currentTimeMillis());
 		Individual[] population = new Individual[popSize];
-		// we initialize the population with random characters
 		for (int i = 0; i < popSize; i++) {
-			char[] tempChromosome = new char[TARGET.length()]; // Creates a char array with its length being equal to
-																// the target's length
+			char[] tempChromosome = new char[TARGET.length()]; 
 
-			for (int j = 0; j < TARGET.length(); j++) { // iterate throughout the Target.length (HelloWorld) assign a
-														// random letter in the alphabet to each index in the new array
+			for (int j = 0; j < TARGET.length(); j++) {
 				tempChromosome[j] = alphabet[generator.nextInt(alphabet.length)];
-
 			}
-			population[i] = new Individual(tempChromosome); // add this random individual to the population
-
+			population[i] = new Individual(tempChromosome); 
 		}
 		return population;
 	}
@@ -110,7 +105,7 @@ public class Practical2 {
 	 * @param parents Parents of the previous generation
 	 * @return
 	 */
-	public static Individual[] crossover(Individual[] parents) { // creates a new generation based on the parents
+	public static Individual[] crossover(Individual[] parents) { 
 		Individual[] newGeneration = new Individual[popsize];
 		Random r = new Random();
 		Individual parent1;
