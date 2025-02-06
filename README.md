@@ -1,9 +1,11 @@
 # Infinite-Monkey-Theorem
+<div align="center">
 ![monkey](banner.gif)
+</div>
 
-> Exploring the Infinite Monkey Theorem through Evolution 
 ## Overview
 In this assignment, we created a genetic algorithm that simulates a simplified version of the infinite monkey theorem. It tries to evolve a random set of strings to a desired sentence, in this case `"Hello World"`.
+
 
 We implemented all of our code in Java, using object-oriented programming principles and concepts of populations and genetics.
 
