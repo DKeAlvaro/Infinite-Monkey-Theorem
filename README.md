@@ -1,8 +1,18 @@
-# Assignment1CCN
-In this assignment we created a genetic algorithm that simulates a simplified version of the infinite monkey theorem. It simulates the process of evolution in a much shorter time.
-Starting from a random set of strings our goal is to evolve them to some desired sentence or word, in this case “Hello World”.
-We implemented all of our code in Java, by making use of our knowledge in object oriented programming and populations and genetics.
-The goal of this assignment is to have a better understanding of how natural selection works throughout programming.
+# Infinite-Monkey-Theorem
+![monkey](banner.gif)
 
-## To run it
-Run the class Practical2. JDK is needed
+> Exploring the Infinite Monkey Theorem through Evolution 
+## Overview
+In this assignment, we created a genetic algorithm that simulates a simplified version of the infinite monkey theorem. It tries to evolve a random set of strings to a desired sentence, in this case `"Hello World"`.
+
+We implemented all of our code in Java, using object-oriented programming principles and concepts of populations and genetics.
+
+The goal of this assignment is to have a better understanding of how natural selection works through programming.
+
+### Running the Program
+Simply run the class `Practical2` and you will see how many generations it takes to evolve the population to the desired sentence.
+
+---
+<div align="center">
+Made with ❤️ and evolutionary algorithms
+</div>

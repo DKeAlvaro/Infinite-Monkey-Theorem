@@ -1,5 +1,5 @@
 import java.util.Random;
-import java.util.Arrays;
+import java.util.ArrayList;
 
 /**
  * Some very basic stuff to get you started. It shows basically how each
@@ -14,171 +14,201 @@ import java.util.Arrays;
  */
 
 public class Practical2 {
-	public static int popsize = 100;
-	public static int parentsLength = 40;
-	public static double mutationRate = 0.1;  
-
-	public static Individual[] parents = new Individual[parentsLength];
+	public static int popsize = 300;
 	static final String TARGET = "HELLO WORLD";
+
 	static char[] alphabet = new char[27];
 
 	public static void main(String[] args) {
-		entrypoint();
-	}
-
-	public static void entrypoint(){
-		Individual[] currentGeneration = randomGeneration(popsize); 
-		HeapSort sorter = new HeapSort();
-		int generationCounter = 1;
+		char[] charTarget = new char[TARGET.length()];
+		for (int i = 0; i < TARGET.length(); i++) {
+			charTarget[i] = TARGET.charAt(i);
+		}
+		Individual[] currentGeneration = randomGeneration(popsize);
+		HeapSort prueba = new HeapSort();
+		for (int i = 0; i < currentGeneration.length; i++) {
+			currentGeneration[i].setFitness(myFitness(currentGeneration[i]));
+		}
+		prueba.sort(currentGeneration);
+		int counter = 1;
 		boolean solutionFound = false;
 
 		while (!solutionFound) {
-			System.out.println();
-			System.out.println("Generation number " + generationCounter);
-			for (Individual i : currentGeneration) {
-				i.setFitness(myFitness(i)); // sets each individual fitness of the current generation	
-				if(i.genoToPhenotype().equals(TARGET)){
+
+			System.out.println("Generation number " + counter);
+			for (int i = 0; i < currentGeneration.length; i++) {
+				currentGeneration[i].setFitness(myFitness(currentGeneration[i]));
+			}
+
+			prueba.sort(currentGeneration);
+			int printingElements = 10;
+			for (int i = 1; i < printingElements; i++) {
+				currentGeneration[i].setFitness(myFitness(currentGeneration[i]));
+				System.out.println(currentGeneration[i].genoToPhenotype() + " individual number " + i
+						+ " fitness " + currentGeneration[i].getFitness());
+				if (currentGeneration[i].getFitness() >= TARGET.length()) {
+					System.out.println(currentGeneration[i].genoToPhenotype() + " found on generation " + counter
+							+ " individual number " + i);
 					solutionFound = true;
+					break;
 				}
 			}
-			sorter.sort(currentGeneration);			
-			printGeneration(currentGeneration);		
+			Individual[] parents = new Individual[50];
 
-			if(!solutionFound){
-				//Creates the parents of the generation based on the elitist selection
-				for (int i = 0; i < parents.length; i++) { 
-					parents[i] = currentGeneration[i].clone();
+			for (int i = 0; i < parents.length; i++) {
+				parents[i] = new Individual(new char[TARGET.length()]);
+				for (int j = 0; j < parents[0].chromosome.length; j++) {
+					// parents[i].chromosome[j] = currentGeneration[i].getChromosome()[j];
+					parents[i].changeLetter(j, currentGeneration[i].getChromosome()[j]);
 				}
-				currentGeneration = applyMutation(crossover(parents));
-				generationCounter++;
+
+			}
+
+			for (int i = 0; i < parents.length; i++) {
+				parents[i].setFitness(myFitness(currentGeneration[i]));
+			}
+			// System.out.println(currentGeneration[0].genoToPhenotype() + " best individual
+			// from generation " + counter);
+			// printGeneration(parents);
+			currentGeneration = crossover(parents);
+			counter++;
+
+			if (counter > 200) {
+				System.out.println("Solution not found after 200 generations");
+				solutionFound = true;
 			}
 
 		}
-		System.out.println(currentGeneration[0].genoToPhenotype() + " found on generation "+ generationCounter);
+
 	}
 
-	public static int myFitness(Individual individual) {
-		int fitness = 0;
+	public static double myFitness(Individual individual) {
+		double fitness = 0;
+		final double increment = 1; // the individual's fitness will increment by 1/11 if a letter matches with the
+									// target (11 letters in hello world)
+
+		char[] targetArray = new char[TARGET.length()]; // creating an empty char array with the same length as the
+														// target
+
 		for (int i = 0; i < TARGET.length(); i++) {
-			if (individual.getChromosome()[i] == TARGET.charAt(i)) { 
-				fitness += 1;
+			targetArray[i] = TARGET.charAt(i); // converting the target string to an array of characters
+		}
+
+		for (int i = 0; i < TARGET.length(); i++) { // iterating through every chromosome of the individual
+			if (individual.getChromosome()[i] == targetArray[i]) { // if a particular individual's chromosome is correct
+				fitness += increment;
 			}
 		}
 		return fitness;
 
 	}
 
+	public static Individual chooseFirstParent(Individual[] population1) {
+		boolean parentFound = false;
+		int index = 0;
+		int generationNumber = 1;
+		while (!parentFound) {
+			population1 = randomGeneration(popsize);
+			for (int i = 0; i < population1.length; i++) {
+				if (targetLetters(population1[i]) >= 8) {
+					parentFound = true;
+					index = i;
+					break;
+				}
+			}
+			System.out.println("generation " + generationNumber);
+			generationNumber++;
+
+		}
+		System.out.println("Parent found!!!");
+		System.out.println(population1[index].genoToPhenotype());
+		return population1[index];
+	}
+
+	public static boolean contains(ArrayList<Character> foundChars, char letter) {
+		boolean found = false;
+		for (int x = 0; x < foundChars.size(); x++) {
+			if (foundChars.get(x) == letter) {
+				found = true;
+				break;
+			}
+		}
+		return found;
+	}
+
+	public static int targetLetters(Individual individual) {
+		ArrayList<Character> foundChars = new ArrayList<Character>();
+		int fitness = 0;
+		for (int i = 0; i < individual.getChromosome().length; i++) {
+			if ((individual.chromosome[i] == 'H' || individual.chromosome[i] == 'E' || individual.chromosome[i] == ' '
+					|| individual.chromosome[i] == 'L' || individual.chromosome[i] == 'O'
+					|| individual.chromosome[i] == 'W' || individual.chromosome[i] == 'R'
+					|| individual.chromosome[i] == 'D') && !contains(foundChars, individual.chromosome[i])) {
+				fitness++;
+				foundChars.add(individual.chromosome[i]);
+			}
+		}
+		return fitness;
+	}
+
 	public static Individual[] randomGeneration(int popSize) {
+		// int popSize = 100;
 		for (char c = 'A'; c <= 'Z'; c++) {
 			alphabet[c - 'A'] = c;
 		}
-		alphabet[26] = ' ';
+		alphabet[26] = ' '; // 26th element of the alphabet is the space
 		Random generator = new Random(System.currentTimeMillis());
 		Individual[] population = new Individual[popSize];
+		// we initialize the population with random characters
 		for (int i = 0; i < popSize; i++) {
-			char[] tempChromosome = new char[TARGET.length()]; 
+			char[] tempChromosome = new char[TARGET.length()]; // Creates a char array with its length being equal to
+																// the target's length
 
-			for (int j = 0; j < TARGET.length(); j++) {
+			for (int j = 0; j < TARGET.length(); j++) { // iterate throughout the Target.length (HelloWorld) assign a
+														// random letter in the alphabet to each index in the new array
 				tempChromosome[j] = alphabet[generator.nextInt(alphabet.length)];
+
 			}
-			population[i] = new Individual(tempChromosome); 
+			population[i] = new Individual(tempChromosome); // add this random individual to the population
+
 		}
 		return population;
 	}
 
-	/**
-	 *  Prints the most representative individuals of a generation
-	 * @param population
-	 */
-	public static void printGeneration(Individual[] population)  {
+	public static void printGeneration(Individual[] population) {
 		int individualnumber = 1;
-		for (int i = 0; i < 5; i++) {
+		boolean solutionFound = false;
+		for (int i = 0; i < population.length && !solutionFound; i++) {
 			System.out.println(population[i].genoToPhenotype() + " individual number " + individualnumber
-					+ " fitness " + population[i].getFitness());
+					+ " fitness " + population[i].getFitness()); // gets the individual's chromosome
+																	// and prints it
+			solutionFound = false;
 			individualnumber++;
-
 		}
 	}
 
-	/**
-	 * Creates a new generation of individuals
-	 * @param parents Parents of the previous generation
-	 * @return
-	 */
-	public static Individual[] crossover(Individual[] parents) { 
+	public static Individual[] crossover(Individual[] parents) { // creates a new generation based on the parent
 		Individual[] newGeneration = new Individual[popsize];
-		Random r = new Random();
-		Individual parent1;
-		Individual parent2;
+		int mutations = 0;
+		final int mutationRate = (int) 0.2 * popsize;
 		for (int i = 0; i < popsize; i++) {
-			parent1 = parents[r.nextInt(parents.length)];
-			parent2 = parents[r.nextInt(parents.length)];
-			newGeneration[i] = merge(parent1, parent2);
-			
-		}
-		return newGeneration;
-	}
-
-	public static Individual randomIndividual(){
-		Random generator = new Random();
-		char[] tempChromosome = new char[TARGET.length()];
-		for (int j = 0; j < TARGET.length(); j++) {
-			tempChromosome[j] = alphabet[generator.nextInt(alphabet.length)];
-		}
-		return new Individual(tempChromosome);
-	}
-
-	/**
-	 * Combines the chromosome of two individuals to create a new Individual
-	 * @param one
-	 * @param two
-	 * @return
-	 */
-	public static Individual merge(Individual one, Individual two){
-		Random r = new Random();
-		int maxCuts = 5;
-		int minCuts = 1;
-		int cuts = r.nextInt(maxCuts-minCuts)+ minCuts + 2;
-		int[] cutsPos = new int[cuts];
-		cutsPos[0] = 0;
-		cutsPos[cutsPos.length-1] = one.getChromosome().length-1; 
-
-		char[] childChromosome = new char[one.getChromosome().length];
-		for(int i = 1; i< cuts-1; i++){
-			cutsPos[i] = r.nextInt(one.getChromosome().length - 1) + 1;
-		}
-		Arrays.sort(cutsPos);
-		for(int i = 0; i < cutsPos.length-1; i++){
-			for(int j = cutsPos[i]; j<= cutsPos[i+1]; j++){
-				if(i % 2 == 0){
-					childChromosome[j] = one.getChromosome()[j];
-				}else{
-					childChromosome[j] = two.getChromosome()[j];
+			newGeneration[i] = new Individual(new char[TARGET.length()]);
+			if (i == (int) (Math.random() * popsize) && mutations < mutationRate) {
+				for (int j = 0; j < TARGET.length(); j++) {
+					if (j == (int) (Math.random() * TARGET.length())) {
+						newGeneration[i].changeLetter(j, alphabet[(int) (Math.random() * 27)]);
+					} else {
+						newGeneration[i].changeLetter(j,
+								parents[(int) (Math.random() * parents.length)].getChromosome()[j]);
+					}
 				}
 			}
-		}
-		return new Individual(childChromosome);
-	}
-
-	/**
-	 * Applies the mutation to a given generation
-	 * @param generation
-	 * @return
-	 */
-	public static Individual[] applyMutation(Individual[] generation){
-		Random r = new Random();
-		double probability;
-		int index;
-		char toReplace;
-		for(Individual i : generation){
-			probability = r.nextDouble();
-			if(probability < mutationRate){
-				index = r.nextInt(generation[0].getChromosome().length);
-				toReplace = alphabet[r.nextInt(alphabet.length)];
-				i.changeLetter(index, toReplace);
+			for (int j = 0; j < TARGET.length(); j++) {
+				// random = (int) (Math.random() * parents.length+1);
+				newGeneration[i].changeLetter(j, parents[(int) (Math.random() * parents.length)].getChromosome()[j]);
 			}
 		}
-		return generation;
+		return newGeneration;
 	}
 
 }
