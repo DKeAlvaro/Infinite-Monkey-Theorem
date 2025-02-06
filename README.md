@@ -1,6 +1,6 @@
 # Infinite-Monkey-Theorem
 <div align="center">
-![monkey](banner.gif)
+<img src="banner.gif" alt="monkey">
 </div>
 
 ## Overview
